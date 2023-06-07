@@ -8,7 +8,11 @@ export default {
 
     data() {
         return {
-            posts: []
+            posts: [],
+
+            pagination: {},
+
+            apiURL: 'http://127.0.0.1:8000/api/posts',
         }
     },
 
@@ -17,14 +21,17 @@ export default {
     },
 
     mounted() {
-        this.getPosts();
+        this.getPosts(this.apiURL);
     },
 
     methods: {
-        getPosts() {
-            axios.get('http://127.0.0.1:8000/api/posts').then(response => {
+        getPosts(apiURL) {
+            axios.get(apiURL).then(response => {
                 console.log(response.data.results);
-                this.posts = response.data.results;
+
+                this.posts = response.data.results.data;
+
+                this.pagination = response.data.results;
             });
         },
     },
@@ -40,11 +47,23 @@ export default {
             <PostItem :post="post"></PostItem>
         </div>
     </div>
+
+    <hr>
+    
+    <div class="post-navigation">
+        <button v-for="link in pagination.links" class="btn mb-3" :class="link.active ? 'btn-primary' : 'btn-outline-secondary'" v-html="link.label" :disabled="link.url == null ? true : false" @click="getPosts(link.url)"></button>
+    </div>
 </div>
 </template>
 
 <style lang="scss" scoped>
 h1{
     color: red;
+}
+
+.post-navigation{
+    display: flex;
+    justify-content: center;
+    gap: 15px;
 }
 </style>

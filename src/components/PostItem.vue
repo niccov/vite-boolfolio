@@ -16,7 +16,17 @@ export default {
 
     computed: {
         coverImage() {
-            return 'http://127.0.0.1:8000/storage/' + this.post.cover_image;
+            if(this.post.cover_image) {
+                
+                return 'http://127.0.0.1:8000/storage/' + this.post.cover_image;
+            
+            }else{
+
+                return 'https://static.vecteezy.com/system/resources/previews/005/337/799/original/icon-image-not-found-free-vector.jpg';
+
+            }
+
+
         }
     }
 }
@@ -25,17 +35,23 @@ export default {
 <template>
 <div class="post p-3">
 
-<div class="post-cover">
-    <img :src="coverImage" alt="">
-</div>   
+    <div class="post-cover text-center">
+       <img :src="coverImage" alt="">
+    </div>   
 
-<div class="text-center"><b>{{ post.title }}</b></div>
+    <div class="text-center"><b>{{ post.title }}</b></div>
 
-<div>{{ post.language }}</div>
+    <em>{{ post.category ? post.category.name : 'Nessuna categoria'}}</em>
 
-<p>
-    {{ post.description }}
-</p>
+    <div class="technologies">
+        <span v-for="technology in post.technologies" class="badge rounded-pill text-bg-secondary">{{ technology.name }}</span>
+    </div>
+
+    <div>{{ post.language }}</div>
+
+    <p>
+        {{ post.description }}
+    </p>
 </div>
 </template>
 
@@ -43,5 +59,13 @@ export default {
 .post{
     border: 1px solid red;
     min-height: 350px;
+
+    .post-cover{
+       height: 150px;
+
+        img{
+            height: 100%;
+        }
+    }
 }
 </style>
